@@ -36,7 +36,7 @@ IsoLatte.fork(
 
 ### Options
 
-* `:stderr` - A path to write the subprocess' stderr stream into. Defaults to '/dev/null',
+* `stderr` - A path to write the subprocess' stderr stream into. Defaults to '/dev/null',
               supplying `nil` lets the subprocess continue writing to the parent's stderr stream.
 * `success` - a callable to execute if the subprocess completes successfully.
 * `fault`   - a callable to execute if the subprocess receives a SIGABRT (segfault).
@@ -45,6 +45,8 @@ IsoLatte.fork(
               Receives the exit status value as its argument.
 * `finish`  - a callable to execute when the subprocess terminates in any way. It receives
                a boolean 'success' value and an exit status as its arguments.
+* `timeout` - a number of seconds to wait - if the process has not terminated by then,
+              the parent will kill it by issuing a SIGKILL signal (triggering the kill callback)
 
 ## Roadmap
 

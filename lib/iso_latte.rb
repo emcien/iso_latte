@@ -1,4 +1,5 @@
 require "ostruct"
+require "timeout"
 
 module IsoLatte
   NO_EXIT = 122
@@ -16,6 +17,7 @@ module IsoLatte
   #   fault:    a callable to execute if the subprocess segfaults, core dumps, etc.
   #   exit:     a callable to execute if the subprocess voluntarily exits with nonzero.
   #             receives the exit status value as its argument.
+  #   timeout:  after this many seconds, the parent should send a SIGKILL to the child.
   #
   # It is allowable to Isolatte.fork from inside an IsoLatte.fork block (reentrant)
   #
@@ -59,7 +61,17 @@ module IsoLatte
 
     write_ex.close
 
-    pid, rc = Process.wait2(child_pid)
+    pid, rc =
+      begin
+        if opts.timeout
+          Timeout.timeout(opts.timeout) { Process.wait2(child_pid) }
+        else
+          Process.wait2(child_pid)
+        end
+      rescue Timeout::Error
+        kill_child(child_pid)
+      end
+
     fail(Error, "Wrong child's exit received!") unless pid == child_pid
 
     if rc.exited? && rc.exitstatus == EXCEPTION_RAISED
@@ -89,6 +101,13 @@ module IsoLatte
     opts.finish.call(success, code) if opts.finish
 
     rc
+  end
+
+  def self.kill_child(pid)
+    Process.kill("KILL", pid)
+    Process.wait2(pid)
+  rescue Errno::ESRCH
+    # Save us from the race condition where it exited just as we decided to kill it.
   end
 
   class Error < StandardError; end
