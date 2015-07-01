@@ -10,6 +10,6 @@ Gem::Specification.new do |spec|
   spec.authors      = ["Emcien Engineering", "Eric Mueller"]
   spec.email        = ["engineering@emcien.com"]
 
-  spec.files = %(lib/iso_latte.rb lib/iso_latte/version.rb)
+  spec.files = %w(lib/iso_latte.rb lib/iso_latte/version.rb)
   spec.require_paths = ["lib"]
 end
