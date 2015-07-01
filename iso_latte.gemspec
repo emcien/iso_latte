@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.authors      = ["Emcien Engineering", "Eric Mueller"]
   spec.email        = ["engineering@emcien.com"]
   spec.license      = "BSD-3-Clause"
+  spec.homepage     = "https://github.com/emcien/iso_latte"
 
   spec.files = %w(lib/iso_latte.rb lib/iso_latte/version.rb)
   spec.require_paths = ["lib"]
