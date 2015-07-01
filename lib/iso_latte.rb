@@ -87,6 +87,8 @@ module IsoLatte
     # This should execute regardless of the outcome
     # (unless some other hook raises an exception first)
     opts.finish.call(success, code) if opts.finish
+
+    rc
   end
 
   class Error < StandardError; end
