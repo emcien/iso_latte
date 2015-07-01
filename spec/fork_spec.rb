@@ -35,7 +35,7 @@ describe "IsoLatte.fork" do
     end
 
     expect(@ran_here).to be_nil
-    expect(File.exist?(tmp_path "ran_at_all")).to be_true
+    expect(File.exist?(tmp_path "ran_at_all")).to be_truthy
   end
 
   it "should write stderr to the specified location" do
