@@ -1,7 +1,7 @@
 require "spec_helper"
 require "fileutils"
 require "segfault"
-require "english"
+require "English"
 
 describe "IsoLatte.fork" do
   before(:each) do
