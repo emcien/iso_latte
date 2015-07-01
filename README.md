@@ -1,14 +1,13 @@
 # IsoLatte
 
-IsoLatte is a gem that allows a block of code to be executed in a subprocess.
-We developed it because we had some background jobs that could require too much
-memory and get killed, or produce segmentation faults, or `exit!` directly -
-that code was in large part written in C and used via FFI.
+Sometimes you need to run background jobs that you can't make important
+guarantees about - they may run out of memory and get killed, or produce
+segmentation faults, or `exit!` directly - and you need to be able to clean
+up after such problems.
 
-For a time, we isolated execution by running the heavy sections in a script,
-which we'd call via popen3; that worked well, but required a lot of effort
-to interact with the process, and parse exceptions and failure messages out
-of the stderr stream of the script.
+IsoLatte is a gem that allows a block of code to be executed in a subprocess.
+Exceptions get passed back to the parent process through a pipe, and various
+exit conditions are handled via configurable callbacks.
 
 ## Simple Process Isolation
 
