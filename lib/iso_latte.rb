@@ -84,7 +84,8 @@ module IsoLatte
     # *explicitly* exited, whether with zero or nonzero.
     opts.exit.call(rc.exitstatus) if opts.exit && rc.exited? && rc.exitstatus != NO_EXIT
 
-    # This should execute *no matter what*
+    # This should execute regardless of the outcome
+    # (unless some other hook raises an exception first)
     opts.finish.call(success, code) if opts.finish
   end
 
