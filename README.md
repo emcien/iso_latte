@@ -9,6 +9,8 @@ IsoLatte is a gem that allows a block of code to be executed in a subprocess.
 Exceptions get passed back to the parent process through a pipe, and various
 exit conditions are handled via configurable callbacks.
 
+[![Build Status](https://travis-ci.org/emcien/iso_latte.svg?branch=master)](https://travis-ci.org/emcien/iso_latte)
+
 ## Simple Process Isolation
 
 ```ruby
