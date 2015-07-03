@@ -50,6 +50,14 @@ IsoLatte.fork(
 * `timeout` - a number of seconds to wait - if the process has not terminated by then,
               the parent will kill it by issuing a SIGKILL signal (triggering the kill callback)
 
+## Supported Platforms
+
+IsoLatte requires `Process.fork`, `Process.waitpid2`, and `IO.pipe`, and also requires
+`Timeout.timeout` and `Process.kill` to function properly. That means that Jruby is
+unsupported (no `fork`), and that Windows is certainly unsupported (no anything).
+
+Currently tested in travis and supported: MRI 2.2, 2.1, 2.0, 1.9, 1.8.7
+
 ## Roadmap
 
 1. Add a convenient mechanism for sending a single marshaled object back to the parent afterward.

@@ -27,7 +27,7 @@ module IsoLatte
   # statuses I guess.
   #
   def self.fork(options = nil, &block)
-    defaults = { stderr: "/dev/null", exit: nil }
+    defaults = { :stderr => "/dev/null", :exit => nil }
     opts = OpenStruct.new(defaults.merge(options || {}))
 
     read_ex, write_ex = IO.pipe

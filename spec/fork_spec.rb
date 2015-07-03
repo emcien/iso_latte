@@ -13,25 +13,25 @@ describe "IsoLatte.fork" do
 
   def segfault!; Segfault.dereference_null; end
 
-  let(:on_kill) { ->() { @killed = true } }
-  let(:on_fault) { ->() { @faulted = true } }
-  let(:on_exit) { ->(rc) { @exited, @exit_status = [true, rc] } }
-  let(:on_finish) { ->(_s, c) { @finished, @exit_status = [true, c] } }
-  let(:on_success) { ->() { @success = true } }
+  let(:on_kill) { lambda { @killed = true } }
+  let(:on_fault) { lambda { @faulted = true } }
+  let(:on_exit) { lambda { |rc| @exited, @exit_status = [true, rc] } }
+  let(:on_finish) { lambda { |_s, c| @finished, @exit_status = [true, c] } }
+  let(:on_success) { lambda { @success = true } }
 
   let(:opts) do
-    { success: on_success,
-      kill: on_kill,
-      exit: on_exit,
-      finish: on_finish,
-      fault: on_fault }
+    { :success => on_success,
+      :kill => on_kill,
+      :exit => on_exit,
+      :finish => on_finish,
+      :fault => on_fault }
   end
 
   it "should run the block in a subprocess" do
     @ran_here = nil
     IsoLatte.fork do
       @ran_here = true
-      FileUtils.touch tmp_path("ran_at_all", clean: true)
+      FileUtils.touch tmp_path("ran_at_all", :clean => true)
     end
 
     expect(@ran_here).to be_nil
@@ -39,7 +39,7 @@ describe "IsoLatte.fork" do
   end
 
   it "should write stderr to the specified location" do
-    IsoLatte.fork(stderr: tmp_path("fork.err", clean: true)) do
+    IsoLatte.fork(:stderr => tmp_path("fork.err", :clean => true)) do
       warn "line 1"
       warn "line 2"
     end
@@ -50,9 +50,9 @@ describe "IsoLatte.fork" do
 
   it "should not redirect stderr if opts.stderr is nil" do
     $stderr = s = StringIO.open("", "w")
-    IsoLatte.fork(stderr: nil) do
+    IsoLatte.fork(:stderr => nil) do
       warn "again"
-      File.write(tmp_path("fork2.stderr", clean: true), s.string)
+      File.open(tmp_path("fork2.stderr", :clean => true), "w") { |f| f.puts s.string }
     end
     $stderr = STDERR
 
