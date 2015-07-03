@@ -58,6 +58,11 @@ unsupported (no `fork`), and that Windows is certainly unsupported (no anything)
 
 Currently tested in travis and supported: MRI 2.2, 2.1, 2.0, 1.9, 1.8.7, and REE 1.8.7
 
+The *tests* (and the Gemfile) requires that a C extension be compiles for the `segfault`
+gem - that gem is not required for functioning, but it's an important test to run - if
+you know of a good way to compatibly test that on other platforms, I'm interested in a
+pull request.
+
 ## Roadmap
 
 1. Add a convenient mechanism for sending a single marshaled object back to the parent afterward.
