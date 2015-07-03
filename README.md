@@ -56,7 +56,7 @@ IsoLatte requires `Process.fork`, `Process.waitpid2`, and `IO.pipe`, and also re
 `Timeout.timeout` and `Process.kill` to function properly. That means that Jruby is
 unsupported (no `fork`), and that Windows is certainly unsupported (no anything).
 
-Currently tested in travis and supported: MRI 2.2, 2.1, 2.0, 1.9, 1.8.7
+Currently tested in travis and supported: MRI 2.2, 2.1, 2.0, 1.9, 1.8.7, and REE 1.8.7
 
 ## Roadmap
 
