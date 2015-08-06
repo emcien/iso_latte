@@ -46,10 +46,7 @@ module IsoLatte
           block.call
         end
       rescue StandardError => e
-        # Things that stick un-marshalable attributes on exceptions need to be handled here.
-        ivars = ["@__better_errors_bindings_stack"]
-        ivars.each { |v| e.instance_variable_set(v, nil) if e.instance_variable_defined?(v) }
-
+        clean_up_for_marshal(e)
         Marshal.dump e, write_ex
         write_ex.flush
         write_ex.close
@@ -108,6 +105,12 @@ module IsoLatte
     Process.wait2(pid)
   rescue Errno::ESRCH
     # Save us from the race condition where it exited just as we decided to kill it.
+  end
+
+  def self.clean_up_for_marshal(e)
+    ivars = ["@__better_errors_bindings_stack", "@wrapped_exception"]
+    ivars.each { |v| e.instance_variable_set(v, nil) if e.instance_variable_defined?(v) }
+    clean_up_for_marshal(e.cause) if e.cause
   end
 
   class Error < StandardError; end
