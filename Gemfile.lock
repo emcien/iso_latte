@@ -1,7 +1,6 @@
 PATH
   remote: .
   specs:
-    iso_latte (1.1)
 
 GEM
   remote: https://rubygems.org/
@@ -29,3 +28,6 @@ DEPENDENCIES
   iso_latte!
   rspec
   segfault
+
+BUNDLED WITH
+   1.10.6
