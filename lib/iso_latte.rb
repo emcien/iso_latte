@@ -110,7 +110,7 @@ module IsoLatte
   def self.clean_up_for_marshal(e)
     ivars = ["@__better_errors_bindings_stack", "@wrapped_exception"]
     ivars.each { |v| e.instance_variable_set(v, nil) if e.instance_variable_defined?(v) }
-    clean_up_for_marshal(e.cause) if e.cause
+    clean_up_for_marshal(e.cause) if e.respond_to?(:cause) && e.cause
   end
 
   class Error < StandardError; end
