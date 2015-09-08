@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    iso_latte (1.4)
+    iso_latte (1.5)
 
 GEM
   remote: https://rubygems.org/
