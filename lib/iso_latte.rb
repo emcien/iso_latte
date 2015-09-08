@@ -46,8 +46,7 @@ module IsoLatte
           block.call
         end
       rescue StandardError => e
-        clean_up_for_marshal(e)
-        Marshal.dump e, write_ex
+        self.marshal(e, write_ex)
         write_ex.flush
         write_ex.close
         exit!(EXCEPTION_RAISED)
@@ -107,10 +106,22 @@ module IsoLatte
     # Save us from the race condition where it exited just as we decided to kill it.
   end
 
-  def self.clean_up_for_marshal(e)
-    ivars = ["@__better_errors_bindings_stack", "@wrapped_exception"]
-    ivars.each { |v| e.instance_variable_set(v, nil) if e.instance_variable_defined?(v) }
-    clean_up_for_marshal(e.cause) if e.respond_to?(:cause) && e.cause
+  def self.marshal(e, io)
+    begin
+      Marshal.dump(e, io)
+    rescue NoMethodError
+    end
+
+    begin
+      e2 = e.class.new(e.message)
+      e2.set_backtrace(e.backtrace)
+      Marshal.dump(e2, io)
+    rescue NoMethodError
+    end
+
+    e3 = IsoLatte::Error.new("Marshalling error with: #{e.message}")
+    e3.set_backtrace(e.backtrace)
+    Marshal.dump(e3, io)
   end
 
   class Error < StandardError; end
