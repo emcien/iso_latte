@@ -108,15 +108,17 @@ module IsoLatte
 
   def self.marshal(e, io)
     begin
-      Marshal.dump(e, io)
+      return Marshal.dump(e, io)
     rescue NoMethodError
+    rescue TypeError
     end
 
     begin
       e2 = e.class.new(e.message)
       e2.set_backtrace(e.backtrace)
-      Marshal.dump(e2, io)
+      return Marshal.dump(e2, io)
     rescue NoMethodError
+    rescue TypeError
     end
 
     e3 = IsoLatte::Error.new("Marshalling error with: #{e.message}")
