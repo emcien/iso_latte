@@ -46,8 +46,8 @@ module IsoLatte
           block.call
         end
       rescue StandardError => e
-        mex = marshal(e)
-        write_ex.write(mex)
+        marshal(e) # To check if it works before writing any of it to the stream
+        marshal(e, write_ex)
         write_ex.flush
         write_ex.close
         exit!(EXCEPTION_RAISED)
@@ -107,9 +107,9 @@ module IsoLatte
     # Save us from the race condition where it exited just as we decided to kill it.
   end
 
-  def self.marshal(e)
+  def self.marshal(e, io = nil)
     begin
-      return Marshal.dump(e)
+      return io ? Marshal.dump(e, io) : Marshal.dump(e)
     rescue NoMethodError
     rescue TypeError
     end
@@ -117,14 +117,14 @@ module IsoLatte
     begin
       e2 = e.class.new(e.message)
       e2.set_backtrace(e.backtrace)
-      return Marshal.dump(e2)
+      return io ? Marshal.dump(e2, io) : Marshal.dump(e2)
     rescue NoMethodError
     rescue TypeError
     end
 
     e3 = IsoLatte::Error.new("Marshalling error with: #{e.message}")
     e3.set_backtrace(e.backtrace)
-    Marshal.dump(e3)
+    io ? Marshal.dump(e3, io) : Marshal.dump(e3)
   end
 
   class Error < StandardError; end
